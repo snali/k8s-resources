@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dev-ConfigMap
+data:
+  app: my-app
+  env: dev
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: config-map-pod
+  labels:
+    app: my-app
+spec:
+  containers:
+    - name: my-container
+      image: nginx
+      ports:
+        - containerPort: 80
+      env:
+        - name: MY_ENV_VAR
+          valueFrom:
+            configMapKeyRef:
+              name: dev-ConfigMap
+              key: env
+      volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: my-volume
